@@ -3,24 +3,34 @@ package com.school;
 public class Main {
     public static void main(String[] args) {
         Course c1 = new Course();
-        c1.setDetails(1 , "DBMS");
+        c1.setDetails(1, "DBMS");
+        
         Course c2 = new Course();
-        c2.setDetails(2 , "LHT");
+        c2.setDetails(2, "LHT");
 
+        Student student1 = new Student("Pratham", "10th Grade");
+        Student student2 = new Student("Krish", "12th Grade");
 
-        Student student = new Student();
-        student.setDetails(11 , "pratham");
-        Student student2 = new Student(); 
-        student2.setDetails(12 , "krish");
-        
-        Student[] arr2 = {student , student2};
-        System.out.println("Registered Students: ");
-        for(Student n : arr2) n.displayDetails();
-        Course [] arr1 = {c1 , c2};
-        System.out.println("Registered course: ");
-        for(Course c : arr1) c.displayDetails();
-        
+        Teacher teacher = new Teacher("Mr. Sharma", "Mathematics");
 
+        Staff staff = new Staff("Mrs. Verma", "Librarian");
 
+        Student[] students = {student1, student2};
+        System.out.println("Registered Students:");
+        for (Student s : students) {
+            s.displayDetails();
+        }
+
+        Course[] courses = {c1, c2};
+        System.out.println("\nRegistered Courses:");
+        for (Course c : courses) {
+            c.displayDetails();
+        }
+
+        System.out.println("\nRegistered Teacher:");
+        teacher.displayDetails();
+
+        System.out.println("\nRegistered Staff:");
+        staff.displayDetails();
     }
 }

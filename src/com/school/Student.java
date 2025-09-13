@@ -1,15 +1,17 @@
 package com.school;
 
-public class Student {
-    int studentId;
-    String name;
 
-    public void setDetails(int id, String studentName) {
-        this.studentId = id;
-        this.name = studentName;
+public class Student extends Person {
+    private String gradeLevel;
+
+    public Student(String name, String gradeLevel) {
+        super(name); 
+        this.gradeLevel = gradeLevel;
     }
 
+    @Override
     public void displayDetails() {
-        System.out.println("Student ID: " + this.studentId + ", Name: " + this.name);
+        super.displayDetails(); 
+        System.out.println("Role: Student, Grade Level: " + gradeLevel);
     }
 }
