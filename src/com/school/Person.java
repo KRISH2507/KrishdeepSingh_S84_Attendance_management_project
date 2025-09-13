@@ -11,14 +11,14 @@ public class Person {
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void displayDetails() {
-        System.out.println("ID: " + id + ", Name: " + name);
+        System.out.println("ID: " + this.id + ", Name: " + this.name);
     }
 }
