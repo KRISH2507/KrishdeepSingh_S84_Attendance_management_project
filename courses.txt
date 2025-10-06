@@ -1,2 +1,2 @@
-1,DBMS
-2,LHT
+101,Intro to Quantum Physics
+102,Advanced Algorithms
