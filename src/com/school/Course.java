@@ -1,34 +1,34 @@
 package com.school;
 
 public class Course implements Storable {
-    private static int nextCourseIdCounter = 101;
+    private static int counter = 101;
+    private int courseId;
+    private String courseName;
 
-    private int courseId;       // Made private
-    private String courseName;  // Made private
-
-    // Constructor
     public Course(String courseName) {
-        this.courseId = nextCourseIdCounter++; // Auto-increment and assign ID
-        this.courseName = courseName;          // Assign course name
+        this.courseName = courseName;
+        this.courseId = counter++;
     }
 
-    // Getter for courseId
-    public int getCourseId() {
-        return courseId;
-    }
-
-    // Getter for courseName
-    public String getCourseName() {
-        return courseName;
-    }
-
-    public void displayDetails() {
-        System.out.println("Course ID: C" + this.courseId + ", Name: " + this.courseName);
-    }
+    public int getCourseId() { return courseId; }
+    public String getCourseName() { return courseName; }
 
     @Override
-    public String toDataString() {
-        // Format: courseId,courseName
-        return courseId + "," + courseName;
+    public String toString() { return courseId + "," + courseName; }
+
+    @Override
+    public String toDataString() { return courseId + "," + courseName; }
+
+    public static Course fromDataString(String line) {
+        String[] parts = line.split(",");
+        Course c = new Course(parts[1]);
+        try {
+            java.lang.reflect.Field field = Course.class.getDeclaredField("courseId");
+            field.setAccessible(true);
+            field.set(c, Integer.parseInt(parts[0]));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return c;
     }
 }
