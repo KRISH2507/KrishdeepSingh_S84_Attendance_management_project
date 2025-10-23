@@ -1,28 +1,42 @@
 package com.school;
 
-public class Student extends Person implements Storable { // Extends Person
+public class Student extends Person implements Storable {
 
-    private String gradeLevel; // Example new specific field
+    private String grade;
 
-    public Student(String name, String gradeLevel) {
-        super(name); // Calls Person constructor
-        this.gradeLevel = gradeLevel;
+    public Student(String name, String grade) {
+        super(name);
+        this.grade = grade;
     }
 
-    // Getter for gradeLevel (optional for now, focus on display)
-    public String getGradeLevel() {
-        return gradeLevel;
-    }
+    public String getGrade() { return grade; }
 
-    @Override // Good practice to indicate overriding
+    @Override
     public void displayDetails() {
-        super.displayDetails(); // Call Person's displayDetails
-        System.out.println(", Grade Level: " + gradeLevel + " (Role: Student)");
+        super.displayDetails();
+        System.out.println(", Grade: " + grade + " (Role: Student)");
     }
 
     @Override
     public String toDataString() {
-        // Format: id,name,gradeLevel
-        return getId() + "," + getName() + "," + gradeLevel;
+        return getId() + "," + getName() + "," + grade;
+    }
+
+    public void setId(int id) {
+        // Used for loading from file
+        try {
+            java.lang.reflect.Field field = Person.class.getDeclaredField("id");
+            field.setAccessible(true);
+            field.set(this, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Student fromDataString(String line) {
+        String[] parts = line.split(",");
+        Student s = new Student(parts[1], parts[2]);
+        s.setId(Integer.parseInt(parts[0]));
+        return s;
     }
 }

@@ -1,2 +1,2 @@
-1,Alice Wonderland,Grade 10
-2,Bob The Builder,Grade 9
+1,Alice,Grade 10
+2,Bob,Grade 9

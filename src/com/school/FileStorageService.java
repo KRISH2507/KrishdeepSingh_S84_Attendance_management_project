@@ -1,28 +1,35 @@
 package com.school;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+import java.io.*;
+import java.util.*;
+import java.util.function.Function;
 
 public class FileStorageService {
 
-    public void saveData(List<? extends Storable> items, String filename) {
-        // Using try-with-resources for automatic closing of PrintWriter/FileWriter
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {  //List<? extends Storable> items → A list of objects that implement the Storable interface.
-                                                                                //✅ This ensures every object passed here knows how to convert itself into a string (via toDataString() method).
+    public <T> List<T> loadData(String filename, Function<String, T> parser) {
+        List<T> list = new ArrayList<>();
+        File file = new File(filename);
+        if (!file.exists()) return list;
 
-                                                                                   // String filename → The name of the file where data will be stored.
-            for (Storable item : items) {
-                writer.println(item.toDataString());
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                list.add(parser.apply(line));
             }
-            System.out.println("Data successfully saved to " + filename);
         } catch (IOException e) {
-            System.err.println("Error saving data to " + filename + ": " + e.getMessage());
+            e.printStackTrace();
         }
+        return list;
     }
 
-    // Loading data is more complex and will be discussed or tackled later.
-    // For example, a loadStudents(String filename) method would read lines,
-    // parse them, and create Student objects. This requires knowing the type.
+    public void saveData(List<? extends Storable> data, String filename) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filename))) {
+            for (Storable s : data) {
+                bw.write(s.toDataString());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
