@@ -1,34 +1,55 @@
 package com.school;
 
-public class Course implements Storable {
-    private static int counter = 101;
-    private int courseId;
-    private String courseName;
+import java.util.ArrayList;
+import java.util.List;
 
-    public Course(String courseName) {
+public class Course implements Storable {
+    private String courseId;
+    private String courseName;
+    private String instructor;
+    private int capacity;
+    private List<Student> enrolledStudents;
+
+    public Course(String courseId, String courseName, String instructor, int capacity) {
+        this.courseId = courseId;
         this.courseName = courseName;
-        this.courseId = counter++;
+        this.instructor = instructor;
+        this.capacity = capacity;
+        this.enrolledStudents = new ArrayList<>();
     }
 
-    public int getCourseId() { return courseId; }
+    public String getCourseId() { return courseId; }
     public String getCourseName() { return courseName; }
+    public String getInstructor() { return instructor; }
+    public int getCapacity() { return capacity; }
+    public List<Student> getEnrolledStudents() { return enrolledStudents; }
+    public int getNumberOfEnrolledStudents() { return enrolledStudents.size(); }
 
-    @Override
-    public String toString() { return courseId + "," + courseName; }
-
-    @Override
-    public String toDataString() { return courseId + "," + courseName; }
-
-    public static Course fromDataString(String line) {
-        String[] parts = line.split(",");
-        Course c = new Course(parts[1]);
-        try {
-            java.lang.reflect.Field field = Course.class.getDeclaredField("courseId");
-            field.setAccessible(true);
-            field.set(c, Integer.parseInt(parts[0]));
-        } catch (Exception e) {
-            e.printStackTrace();
+    public boolean addStudent(Student student) {
+        if (enrolledStudents.size() < capacity) {
+            enrolledStudents.add(student);
+            return true;
         }
-        return c;
+        return false;
+    }
+
+    public void displayDetails() {
+        System.out.println("Course ID: " + courseId);
+        System.out.println("Course Name: " + courseName);
+        System.out.println("Instructor: " + instructor);
+        System.out.println("Capacity: " + capacity);
+        System.out.println("Currently Enrolled: " + enrolledStudents.size());
+        System.out.println("-----------------------------");
+    }
+
+    @Override
+    public String toDataString() {
+        return courseId + "," + courseName + "," + instructor + "," + capacity;
+    }
+
+    public static Course fromDataString(String data) {
+        String[] parts = data.split(",");
+        if (parts.length < 4) throw new IllegalArgumentException("Invalid data: " + data);
+        return new Course(parts[0], parts[1], parts[2], Integer.parseInt(parts[3]));
     }
 }

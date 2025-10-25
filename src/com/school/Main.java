@@ -1,43 +1,35 @@
 package com.school;
 
-import java.util.*;
-
 public class Main {
-    public static void displaySchoolDirectory(List<Person> people) {
-        System.out.println("\n--- School Directory ---");
-        for (Person p : people) p.displayDetails();
-    }
-
     public static void main(String[] args) {
-        FileStorageService storageService = new FileStorageService();
-        RegistrationService regService = new RegistrationService(storageService);
-        AttendanceService attendanceService = new AttendanceService(storageService, regService);
+        RegistrationService regService = new RegistrationService();
+        AttendanceService attendanceService = new AttendanceService(regService);
+
+        // Create courses
+        Course javaCourse = regService.createCourse("C101", "Java Programming", "Dr. Smith", 2);
+        Course pythonCourse = regService.createCourse("C102", "Python Programming", "Dr. John", 1);
 
         // Register students
-        Student s1 = new Student("Alice", "Grade 10");
-        Student s2 = new Student("Bob", "Grade 9");
+        Student s1 = new Student("Alice", "A");
+        Student s2 = new Student("Bob", "B");
+        Student s3 = new Student("Charlie", "C");
+
         regService.registerStudent(s1);
         regService.registerStudent(s2);
+        regService.registerStudent(s3);
 
-        // Register teacher
-        Teacher t1 = new Teacher("Dr. Smith", "Math");
-        regService.registerTeacher(t1);
+        // Enroll students
+        regService.enrollStudentInCourse(s1, javaCourse);
+        regService.enrollStudentInCourse(s2, javaCourse);
+        regService.enrollStudentInCourse(s3, javaCourse); // Should fail
 
-        // Register staff
-        Staff st1 = new Staff("Mr. John", "Librarian");
-        regService.registerStaff(st1);
+        // Display course details
+        for (Course c : regService.getCourses()) {
+            c.displayDetails();
+        }
 
-        // Create course
-        Course c1 = new Course("Algebra");
-        regService.createCourse(c1);
-
-        displaySchoolDirectory(regService.getAllPeople());
-
-        attendanceService.markAttendance(s1, c1, "Present");
-        attendanceService.markAttendance(s2, c1, "Absent");
-        attendanceService.displayAttendanceLog();
-
-        regService.saveAllRegistrations();
-        attendanceService.saveAttendanceData();
+        // Mark attendance
+        attendanceService.markAttendance(s1.getId(), javaCourse.getCourseId(), true);
+        attendanceService.markAttendance(s3.getId(), javaCourse.getCourseId(), true); // Not enrolled
     }
 }

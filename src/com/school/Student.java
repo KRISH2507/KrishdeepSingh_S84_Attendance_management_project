@@ -1,11 +1,15 @@
 package com.school;
 
 public class Student extends Person implements Storable {
-
     private String grade;
 
     public Student(String name, String grade) {
         super(name);
+        this.grade = grade;
+    }
+
+    public Student(String id, String name, String grade) {
+        super(id, name);
         this.grade = grade;
     }
 
@@ -22,21 +26,9 @@ public class Student extends Person implements Storable {
         return getId() + "," + getName() + "," + grade;
     }
 
-    public void setId(int id) {
-        // Used for loading from file
-        try {
-            java.lang.reflect.Field field = Person.class.getDeclaredField("id");
-            field.setAccessible(true);
-            field.set(this, id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static Student fromDataString(String line) {
-        String[] parts = line.split(",");
-        Student s = new Student(parts[1], parts[2]);
-        s.setId(Integer.parseInt(parts[0]));
-        return s;
+    public static Student fromDataString(String data) {
+        String[] parts = data.split(",");
+        if (parts.length < 3) throw new IllegalArgumentException("Invalid data: " + data);
+        return new Student(parts[0], parts[1], parts[2]);
     }
 }
