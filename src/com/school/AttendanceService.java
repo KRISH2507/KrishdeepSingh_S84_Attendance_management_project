@@ -1,35 +1,29 @@
 package com.school;
 
-import java.util.*;
-
 public class AttendanceService {
-    private FileStorageService storageService;
     private RegistrationService registrationService;
-    private List<String> attendanceLog = new ArrayList<>();
 
-    public AttendanceService(FileStorageService storageService, RegistrationService regService) {
-        this.storageService = storageService;
-        this.registrationService = regService;
+    public AttendanceService(RegistrationService registrationService) {
+        this.registrationService = registrationService;
     }
 
-    public void markAttendance(Student s, Course c, String status) {
-        attendanceLog.add(s.getName() + " - " + c.getCourseName() + " - " + status);
-    }
+    public void markAttendance(String studentId, String courseId, boolean present) {
+        Student student = registrationService.findStudentById(studentId);
+        Course course = registrationService.findCourseById(courseId);
 
-    public void markAttendance(int studentId, int courseId, String status) {
-        Student s = registrationService.findStudentById(studentId);
-        Course c = registrationService.findCourseById(courseId);
-        if (s != null && c != null) markAttendance(s, c, status);
-    }
-
-    public void displayAttendanceLog() {
-        System.out.println("\n--- Attendance Log ---");
-        for (String entry : attendanceLog) {
-            System.out.println(entry);
+        if (student == null) {
+            System.out.println("Student not found: " + studentId);
+            return;
         }
-    }
+        if (course == null) {
+            System.out.println("Course not found: " + courseId);
+            return;
+        }
+        if (!course.getEnrolledStudents().contains(student)) {
+            System.out.println("Student " + studentId + " is not enrolled in " + course.getCourseName());
+            return;
+        }
 
-    public void saveAttendanceData() {
-        storageService.saveData(new ArrayList<>(attendanceLog.stream().map(s -> (Storable) () -> s).toList()), "attendance_log.txt");
+        System.out.println("Attendance marked for " + studentId + " in " + course.getCourseName() + ": " + (present ? "Present" : "Absent"));
     }
 }
